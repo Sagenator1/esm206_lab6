@@ -1,0 +1,75 @@
+---
+title: "esm206_lab6 - Linear Regression"
+author: "Sage Davis"
+date: "11/2/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(palmerpenguins)
+library(broom)
+library(equatiomatic)
+```
+
+## RAnk based test example
+
+Mann-_Whitney U (non-parametric alternative to an unpaired 2-sample t-test)
+
+H0: Equal ranks (or medians)
+HA: Ranks not equal (medians)
+
+### Create some samples 
+
+'set.seed()'  to create "psuedorandom but reproducible samples"
+
+If we all have same starting point then we all have the same reference...
+
+```{r}
+set.seed(1414)
+gp_1 <- sample.int(20, size = 15, replace = TRUE)  # replace allow for doubles
+gp_1
+
+set.seed(1424)
+gp_2 <- sample.int(30, size = 15, replace = TRUE)  # replace = TRUE allow for doubles
+gp_2
+```
+Take a look at the distribution using 'hist()'
+
+```{r}
+hist(gp_1)
+hist(gp_2)
+```
+
+Try a t-test to compare results
+
+```{r}
+ttest <- t.test(gp_1, gp_2)
+
+ttest
+# if these are paired you can add
+# probability of 19.8% that two samples with means that are at least differrent this by
+
+```
+
+This p-value means if our samples are drawn from populations with the same mean (i.e., if the null hyp is true), there is a `r round(ttest$p.value,2)` prob of finding samples means "at lease as different" as mine by random chance.  
+
+[A more comprehensive explanation of diff between groups  ... actually means, data spreads, effect size  ..there is not significant difference (t(dF0)) = t-statistical value, p = )]
+
+### Mann Whitney U rank based test
+
+We will use the 'wilcox.test()' fuct to perform a 2 sample rank-based test
+
+```{r}
+mwu <- wilcox.test(gp_1, gp_2)
+
+mwu
+```
+
+This p-value means that if our samples are drawn from populations with the same median (i.e., if the null hyp is true), there is a `r round(mwu$p.value,2)` prob  of finding samples means "at lease as different" as mine by random chance. 
+
+Concl:  No sign diff between medians (Mann_Whitney U; U = `r mwu$statistic, p = round(mwu$p.value, 3)`)
+
+The median of group A (M= 22.4g) and group B
+
